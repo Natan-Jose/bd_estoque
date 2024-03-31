@@ -137,8 +137,19 @@ WHERE CodRequisicaoProduto = 1;
 SELECT * FROM RequisicaoProduto
 WHERE Quantidade = NULL;
 
+-- -----------------------------
+
 SELECT * FROM RequisicaoProduto
 WHERE Quantidade IS NULL;
 
 SELECT * FROM RequisicaoProduto
 WHERE Quantidade IS NOT NULL;
+
+SELECT * FROM Requisicao
+WHERE FkCodSetor IN (1, 4);
+
+SELECT * FROM Setor
+WHERE CodSetor NOT IN (1, 3);
+
+ALTER TABLE produto 
+ADD QuantidadeEstoque TINYINT;
