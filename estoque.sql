@@ -3,9 +3,9 @@ CREATE DATABASE SistemaDeEstoque;
 USE SistemaDeEstoque;
 
 CREATE TABLE usuario(
-CodUsuario int UNSIGNED NOT NULL AUTO_INCREMENT,
-NomeUsuario varchar(80),
-CPF varchar(14) NOT NULL UNIQUE,
+CodUsuario INT UNSIGNED NOT NULL AUTO_INCREMENT,
+NomeUsuario VARCHAR(80),
+CPF VARCHAR(14) NOT NULL UNIQUE,
 PRIMARY KEY (CodUsuario)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -15,8 +15,8 @@ VALUES
 (102030, 'Jeferson', '132.796.175-02');
  
 CREATE TABLE setor(
-CodSetor int UNSIGNED NOT NULL AUTO_INCREMENT,
-NomeSetor varchar(80),
+CodSetor INT UNSIGNED NOT NULL AUTO_INCREMENT,
+NomeSetor VARCHAR(80),
 PRIMARY KEY(CodSetor)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -28,8 +28,8 @@ VALUES
 (4, 'Marketing');
 
 CREATE TABLE produto(
-CodProduto int UNSIGNED NOT NULL AUTO_INCREMENT,
-NomeProduto varchar(80),
+CodProduto INT UNSIGNED NOT NULL AUTO_INCREMENT,
+NomeProduto VARCHAR(80),
 PRIMARY KEY(CodProduto)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -47,10 +47,10 @@ VALUES
 (45, 'Caneta Vermelha');
 
 CREATE TABLE requisicao(
-CodRequisicao int UNSIGNED NOT NULL AUTO_INCREMENT,
-DataRequisicao date,
-FkCodSetor int UNSIGNED,
-FkCodUsuario int UNSIGNED,
+CodRequisicao INT UNSIGNED NOT NULL AUTO_INCREMENT,
+DataRequisicao DATE,
+FkCodSetor INT UNSIGNED NOT NULL,
+FkCodUsuario INT UNSIGNED NOT NULL,
 PRIMARY KEY (CodRequisicao)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -64,10 +64,10 @@ VALUES
 (1204, '2020-02-10', 4, 102030);
 
 CREATE TABLE RequisicaoProduto(
-CodRequisicaoProduto int UNSIGNED NOT NULL AUTO_INCREMENT,
-Quantidade int,
-FkCodRequisicao int UNSIGNED,
-FkCodProduto int UNSIGNED,
+CodRequisicaoProduto INT UNSIGNED NOT NULL AUTO_INCREMENT,
+Quantidade INT,
+FkCodRequisicao INT UNSIGNED NOT NULL,
+FkCodProduto INT UNSIGNED NOT NULL,
 PRIMARY KEY(CodRequisicaoProduto)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -86,70 +86,64 @@ VALUES
 -- FK TABLE REQUISIÇÃO --
 
 ALTER TABLE requisicao
-ADD FOREIGN KEY (FkCodSetor)
+ADD CONSTRAINT Fk_requisicao_Setor
+FOREIGN KEY (FkCodSetor)
 REFERENCES setor (CodSetor);
 
 ALTER TABLE requisicao
-ADD FOREIGN KEY(FkCodUsuario)
+ADD CONSTRAINT Fk_requisicao_Usuario
+FOREIGN KEY(FkCodUsuario)
 REFERENCES usuario (CodUsuario);
 
 -- FK TABLE REQUISIÇÃO DO PRODUTO --
 
 ALTER TABLE RequisicaoProduto
-ADD FOREIGN KEY (FkCodRequisicao) 
-REFERENCES requisicao (codRequisicao);
+ADD CONSTRAINT Fk_RequisicaoProduto_CodRequisicao
+FOREIGN KEY (FkCodRequisicao) 
+REFERENCES requisicao (CodRequisicao);
 
 ALTER TABLE RequisicaoProduto
-ADD FOREIGN KEY (FkCodProduto) 
+ADD CONSTRAINT Fk_RequisicaoProduto_Produto
+FOREIGN KEY (FkCodProduto) 
 REFERENCES produto (CodProduto);
-
--- CONSULTAS --
+-- Consulta à tabela RequisicaoProduto --
 SELECT * FROM RequisicaoProduto;
 
-SELECT * FROM  produto
-ORDER BY 1 DESC;
+-- Ordenar a tabela produto por CodProduto em ordem decrescente --
+SELECT * FROM produto ORDER BY CodProduto DESC;
 
+-- Selecionar os códigos de produto distintos --
 SELECT DISTINCT CodProduto FROM produto;
 
-SELECT * FROM requisicao
-WHERE FkCodSetor = 3 
-AND FkCodUsuario = 102030; 
+-- Consultar requisições para o setor 3 e o usuário 102030 --
+SELECT * FROM requisicao WHERE FkCodSetor = 3 AND FkCodUsuario = 102030;
 
-SELECT * FROM requisicao
-WHERE FkCodSetor = 1
-OR FkCodSetor = 4;
+-- Consultar requisições para o setor 1 ou 4 --
+SELECT * FROM requisicao WHERE FkCodSetor = 1 OR FkCodSetor = 4;
 
-SELECT * FROM requisicao
-WHERE NOT FkCodSetor = 3;
+-- Consultar requisições que não são para o setor 3 --
+SELECT * FROM requisicao WHERE NOT FkCodSetor = 3;
 
-SELECT * FROM requisicao
-WHERE FkCodSetor = 3
-AND FkCodUsuario = 102030
-OR FkCodSetor = 1;
+-- Consultar requisições para o setor 3 e o usuário 102030 ou para o setor 1 --
+SELECT * FROM requisicao WHERE (FkCodSetor = 3 AND FkCodUsuario = 102030) OR FkCodSetor = 1;
 
-SELECT * FROM RequisicaoProduto;
+-- Consulta para atualizar a quantidade para NULL em um registro específico --
+UPDATE RequisicaoProduto SET Quantidade = NULL WHERE CodRequisicaoProduto = 1;
 
-UPDATE RequisicaoProduto
-SET Quantidade = NULL
-WHERE CodRequisicaoProduto = 1;
+-- Consulta corrigida para selecionar registros com Quantidade NULL --
+SELECT * FROM RequisicaoProduto WHERE Quantidade IS NULL;
 
--- FORMA ERRADA --
-SELECT * FROM RequisicaoProduto
-WHERE Quantidade = NULL;
+-- Consulta para selecionar registros com Quantidade não NULL --
+SELECT * FROM RequisicaoProduto WHERE Quantidade IS NOT NULL;
 
--- -----------------------------
+-- Consulta para selecionar requisições para os setores 1 e 4 --
+SELECT * FROM Requisicao WHERE FkCodSetor IN (1, 4);
 
-SELECT * FROM RequisicaoProduto
-WHERE Quantidade IS NULL;
+-- Consulta para selecionar setores cujos códigos não estão em 1 ou 3 --
+SELECT * FROM Setor WHERE CodSetor NOT IN (1, 3);
 
-SELECT * FROM RequisicaoProduto
-WHERE Quantidade IS NOT NULL;
+-- Adição da coluna QuantidadeEstoque à tabela produto --
+ALTER TABLE produto ADD QuantidadeEstoque TINYINT;
 
-SELECT * FROM Requisicao
-WHERE FkCodSetor IN (1, 4);
-
-SELECT * FROM Setor
-WHERE CodSetor NOT IN (1, 3);
-
-ALTER TABLE produto 
-ADD QuantidadeEstoque TINYINT;
+-- Consulta à tabela REQUISICAO --
+SELECT * FROM REQUISICAO;
