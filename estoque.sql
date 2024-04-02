@@ -81,9 +81,9 @@ VALUES
 (DEFAULT, 1, 33, 1200),
 (DEFAULT, 1, 10, 1202),
 (DEFAULT, 2, 10, 1202),
-(DEFAULT, 33, 5, 1204);
-       
--- FK TABLE REQUISIÇÃO --
+(DEFAULT, 33, 5, 1204);     
+
+-- RESTRIÇÕES
 
 ALTER TABLE requisicao
 ADD CONSTRAINT Fk_requisicao_Setor
@@ -95,8 +95,6 @@ ADD CONSTRAINT Fk_requisicao_Usuario
 FOREIGN KEY(FkCodUsuario)
 REFERENCES usuario (CodUsuario);
 
--- FK TABLE REQUISIÇÃO DO PRODUTO --
-
 ALTER TABLE RequisicaoProduto
 ADD CONSTRAINT Fk_RequisicaoProduto_CodRequisicao
 FOREIGN KEY (FkCodRequisicao) 
@@ -106,6 +104,9 @@ ALTER TABLE RequisicaoProduto
 ADD CONSTRAINT Fk_RequisicaoProduto_Produto
 FOREIGN KEY (FkCodProduto) 
 REFERENCES produto (CodProduto);
+
+SHOW TABLES;
+
 -- Consulta à tabela RequisicaoProduto --
 SELECT * FROM RequisicaoProduto;
 
