@@ -81,9 +81,13 @@ VALUES
 (DEFAULT, 1, 33, 1200),
 (DEFAULT, 1, 10, 1202),
 (DEFAULT, 2, 10, 1202),
-(DEFAULT, 33, 5, 1204);     
+(DEFAULT, 33, 5, 1204);
+       
 
--- RESTRIÇÕES
+-- Restrições das tabelas
+
+
+-- Limitadores para a tabela ` Requisicao`
 
 ALTER TABLE requisicao
 ADD CONSTRAINT Fk_requisicao_Setor
@@ -95,6 +99,8 @@ ADD CONSTRAINT Fk_requisicao_Usuario
 FOREIGN KEY(FkCodUsuario)
 REFERENCES usuario (CodUsuario);
 
+-- Limitadores para a tabela ` RequisicaoProduto`
+
 ALTER TABLE RequisicaoProduto
 ADD CONSTRAINT Fk_RequisicaoProduto_CodRequisicao
 FOREIGN KEY (FkCodRequisicao) 
@@ -105,46 +111,47 @@ ADD CONSTRAINT Fk_RequisicaoProduto_Produto
 FOREIGN KEY (FkCodProduto) 
 REFERENCES produto (CodProduto);
 
-SHOW TABLES;
+-- Adicionando campo
+ALTER TABLE produto 
+ADD QuantidaEstoque TINYINT;
 
--- Consulta à tabela RequisicaoProduto --
-SELECT * FROM RequisicaoProduto;
+-- Alterando tipo
+ALTER TABLE produto
+MODIFY QuantidaEstoque TINYINT UNSIGNED; 
 
--- Ordenar a tabela produto por CodProduto em ordem decrescente --
 SELECT * FROM produto ORDER BY CodProduto DESC;
 
--- Selecionar os códigos de produto distintos --
 SELECT DISTINCT CodProduto FROM produto;
 
--- Consultar requisições para o setor 3 e o usuário 102030 --
 SELECT * FROM requisicao WHERE FkCodSetor = 3 AND FkCodUsuario = 102030;
 
--- Consultar requisições para o setor 1 ou 4 --
 SELECT * FROM requisicao WHERE FkCodSetor = 1 OR FkCodSetor = 4;
 
--- Consultar requisições que não são para o setor 3 --
 SELECT * FROM requisicao WHERE NOT FkCodSetor = 3;
 
--- Consultar requisições para o setor 3 e o usuário 102030 ou para o setor 1 --
 SELECT * FROM requisicao WHERE (FkCodSetor = 3 AND FkCodUsuario = 102030) OR FkCodSetor = 1;
 
--- Consulta para atualizar a quantidade para NULL em um registro específico --
 UPDATE RequisicaoProduto SET Quantidade = NULL WHERE CodRequisicaoProduto = 1;
 
--- Consulta corrigida para selecionar registros com Quantidade NULL --
 SELECT * FROM RequisicaoProduto WHERE Quantidade IS NULL;
 
--- Consulta para selecionar registros com Quantidade não NULL --
 SELECT * FROM RequisicaoProduto WHERE Quantidade IS NOT NULL;
 
--- Consulta para selecionar requisições para os setores 1 e 4 --
 SELECT * FROM Requisicao WHERE FkCodSetor IN (1, 4);
 
--- Consulta para selecionar setores cujos códigos não estão em 1 ou 3 --
 SELECT * FROM Setor WHERE CodSetor NOT IN (1, 3);
 
--- Adição da coluna QuantidadeEstoque à tabela produto --
-ALTER TABLE produto ADD QuantidadeEstoque TINYINT;
+-- valores aleatórios
+SELECT RAND(); 
 
--- Consulta à tabela REQUISICAO --
-SELECT * FROM REQUISICAO;
+UPDATE produto
+SET QuantidaEstoque = (ROUND((0 + (250 - 0)) * RAND()))
+WHERE CodProduto <= 45;
+-- AND QuantidadeEstoque IS NULL
+
+SELECT ROUND((0 + (250 - 0)) * RAND());
+
+SELECT * FROM produto;
+
+SHOW TABLES;
+
