@@ -83,11 +83,7 @@ VALUES
 (DEFAULT, 2, 10, 1202),
 (DEFAULT, 33, 5, 1204);
        
-
--- Restrições das tabelas
-
-
--- Limitadores para a tabela ` Requisicao`
+-- FK TABLE REQUISIÇÃO --
 
 ALTER TABLE requisicao
 ADD CONSTRAINT Fk_requisicao_Setor
@@ -99,7 +95,7 @@ ADD CONSTRAINT Fk_requisicao_Usuario
 FOREIGN KEY(FkCodUsuario)
 REFERENCES usuario (CodUsuario);
 
--- Limitadores para a tabela ` RequisicaoProduto`
+-- FK TABLE REQUISIÇÃO DO PRODUTO --
 
 ALTER TABLE RequisicaoProduto
 ADD CONSTRAINT Fk_RequisicaoProduto_CodRequisicao
@@ -111,13 +107,11 @@ ADD CONSTRAINT Fk_RequisicaoProduto_Produto
 FOREIGN KEY (FkCodProduto) 
 REFERENCES produto (CodProduto);
 
--- Adicionando campo
 ALTER TABLE produto 
-ADD QuantidaEstoque TINYINT;
+ADD QuantidadeEstoque TINYINT;
 
--- Alterando tipo
 ALTER TABLE produto
-MODIFY QuantidaEstoque TINYINT UNSIGNED; 
+MODIFY QuantidadeEstoque TINYINT UNSIGNED; 
 
 SELECT * FROM produto ORDER BY CodProduto DESC;
 
@@ -141,11 +135,11 @@ SELECT * FROM Requisicao WHERE FkCodSetor IN (1, 4);
 
 SELECT * FROM Setor WHERE CodSetor NOT IN (1, 3);
 
--- valores aleatórios
+-- VALORES ALEATORIOS
 SELECT RAND(); 
 
 UPDATE produto
-SET QuantidaEstoque = (ROUND((0 + (250 - 0)) * RAND()))
+SET QuantidadeEstoque = (ROUND((0 + (250 - 0)) * RAND()))
 WHERE CodProduto <= 45;
 -- AND QuantidadeEstoque IS NULL
 
@@ -155,3 +149,23 @@ SELECT * FROM produto;
 
 SHOW TABLES;
 
+SELECT * FROM produto
+WHERE CodProduto BETWEEN 9 AND 20;
+
+SELECT * FROM produto
+WHERE CodProduto NOT BETWEEN 9 AND 20;
+
+SELECT * FROM produto LIMIT 3;
+
+SELECT NomeProduto, QuantidadeEstoque
+FROM produto
+ORDER BY QuantidadeEstoque DESC
+LIMIT 3;
+
+SELECT NomeProduto, QuantidadeEstoque
+FROM produto
+LIMIT 2, 3;
+
+SELECT NomeProduto, QuantidadeEstoque
+FROM produto
+LIMIT 3 OFFSET 2; 
