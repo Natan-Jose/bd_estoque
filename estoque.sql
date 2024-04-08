@@ -136,18 +136,18 @@ SELECT * FROM Requisicao WHERE FkCodSetor IN (1, 4);
 SELECT * FROM Setor WHERE CodSetor NOT IN (1, 3);
 
 -- VALORES ALEATORIOS
+
 SELECT RAND(); 
+
+SELECT ROUND((0 + (250 - 0)) * RAND());
+---------------------------------------
 
 UPDATE produto
 SET QuantidadeEstoque = (ROUND((0 + (250 - 0)) * RAND()))
 WHERE CodProduto <= 45;
 -- AND QuantidadeEstoque IS NULL
 
-SELECT ROUND((0 + (250 - 0)) * RAND());
-
 SELECT * FROM produto;
-
-SHOW TABLES;
 
 SELECT * FROM produto
 WHERE CodProduto BETWEEN 9 AND 20;
@@ -169,3 +169,12 @@ LIMIT 2, 3;
 SELECT NomeProduto, QuantidadeEstoque
 FROM produto
 LIMIT 3 OFFSET 2; 
+
+SELECT COUNT(*) AS Total FROM produto;
+
+SELECT
+MIN(QuantidadeEstoque) AS MenorEstoque,
+MAX(QuantidadeEstoque) AS Maior,
+SUM(QuantidadeEstoque) AS TotalEstoque, 
+AVG(QuantidadeEstoque) AS 'Média'
+FROM produto;
