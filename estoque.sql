@@ -12,8 +12,9 @@ PRIMARY KEY (CodUsuario)
 INSERT INTO usuario (CodUsuario, NomeUsuario, CPF)
 VALUES
 (14780, 'Pascal', '160.230.560-91'),
-(102030, 'Jeferson', '132.796.175-02');
- 
+(102030, 'Jeferson', '132.796.175-02'),
+(19092, 'Gil', '148.928.257-13');
+
 CREATE TABLE setor(
 CodSetor INT UNSIGNED NOT NULL AUTO_INCREMENT,
 NomeSetor VARCHAR(80),
@@ -44,7 +45,8 @@ VALUES
 (10, 'Corretor'),
 (15, 'Lápis Grafite'),
 (33, 'Resma de Papel'),
-(45, 'Caneta Vermelha');
+(45, 'Caneta Vermelha'),
+(90, 'Coleção de Cor');
 
 CREATE TABLE requisicao(
 CodRequisicao INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -88,52 +90,34 @@ VALUES
 ALTER TABLE requisicao
 ADD CONSTRAINT Fk_requisicao_Setor
 FOREIGN KEY (FkCodSetor)
-REFERENCES setor (CodSetor);
+REFERENCES setor (CodSetor)
+ON DELETE CASCADE;
 
 ALTER TABLE requisicao
 ADD CONSTRAINT Fk_requisicao_Usuario
 FOREIGN KEY(FkCodUsuario)
-REFERENCES usuario (CodUsuario);
+REFERENCES usuario (CodUsuario)
+ON DELETE CASCADE;
 
 -- FK TABLE REQUISIÇÃO DO PRODUTO --
 
 ALTER TABLE RequisicaoProduto
 ADD CONSTRAINT Fk_RequisicaoProduto_CodRequisicao
 FOREIGN KEY (FkCodRequisicao) 
-REFERENCES requisicao (CodRequisicao);
+REFERENCES requisicao (CodRequisicao)
+ON DELETE CASCADE;
 
 ALTER TABLE RequisicaoProduto
 ADD CONSTRAINT Fk_RequisicaoProduto_Produto
 FOREIGN KEY (FkCodProduto) 
-REFERENCES produto (CodProduto);
+REFERENCES produto (CodProduto)
+ON DELETE CASCADE;
 
 ALTER TABLE produto 
 ADD QuantidadeEstoque TINYINT;
 
 ALTER TABLE produto
 MODIFY QuantidadeEstoque TINYINT UNSIGNED; 
-
-SELECT * FROM produto ORDER BY CodProduto DESC;
-
-SELECT DISTINCT CodProduto FROM produto;
-
-SELECT * FROM requisicao WHERE FkCodSetor = 3 AND FkCodUsuario = 102030;
-
-SELECT * FROM requisicao WHERE FkCodSetor = 1 OR FkCodSetor = 4;
-
-SELECT * FROM requisicao WHERE NOT FkCodSetor = 3;
-
-SELECT * FROM requisicao WHERE (FkCodSetor = 3 AND FkCodUsuario = 102030) OR FkCodSetor = 1;
-
-UPDATE RequisicaoProduto SET Quantidade = NULL WHERE CodRequisicaoProduto = 1;
-
-SELECT * FROM RequisicaoProduto WHERE Quantidade IS NULL;
-
-SELECT * FROM RequisicaoProduto WHERE Quantidade IS NOT NULL;
-
-SELECT * FROM Requisicao WHERE FkCodSetor IN (1, 4);
-
-SELECT * FROM Setor WHERE CodSetor NOT IN (1, 3);
 
 -- VALORES ALEATORIOS
 
@@ -146,36 +130,4 @@ UPDATE produto
 SET QuantidadeEstoque = (ROUND((0 + (250 - 0)) * RAND()))
 WHERE CodProduto <= 45;
 -- AND QuantidadeEstoque IS NULL
-
-SELECT * FROM produto;
-
-SELECT * FROM produto
-WHERE CodProduto BETWEEN 9 AND 20;
-
-SELECT * FROM produto
-WHERE CodProduto NOT BETWEEN 9 AND 20;
-
-SELECT * FROM produto LIMIT 3;
-
-SELECT NomeProduto, QuantidadeEstoque
-FROM produto
-ORDER BY QuantidadeEstoque DESC
-LIMIT 3;
-
-SELECT NomeProduto, QuantidadeEstoque
-FROM produto
-LIMIT 2, 3;
-
-SELECT NomeProduto, QuantidadeEstoque
-FROM produto
-LIMIT 3 OFFSET 2; 
-
-SELECT COUNT(*) AS Total FROM produto;
-
-SELECT
-MIN(QuantidadeEstoque) AS MenorEstoque,
-MAX(QuantidadeEstoque) AS Maior,
-SUM(QuantidadeEstoque) AS TotalEstoque, 
-AVG(QuantidadeEstoque) AS "Média"
-FROM produto;
 
