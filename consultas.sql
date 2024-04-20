@@ -94,7 +94,6 @@ FROM usuario
 LEFT JOIN requisicao
 ON usuario.CodUsuario = requisicao.FkCodUsuario
 GROUP BY usuario.NomeUsuario;
-describe requisicao;
 
 SELECT produto.NomeProduto, COUNT(RequisicaoProduto.CodRequisicaoProduto) 
 AS Quantidade
@@ -102,3 +101,11 @@ FROM RequisicaoProduto
 RIGHT JOIN Produto
 ON Produto.CodProduto = RequisicaoProduto.FkCodProduto
 GROUP BY Produto.NomeProduto;
+
+SELECT usuario.NomeUsuario, COUNT(requisicao.CodRequisicao)
+AS "Quantidade Requisição" 
+FROM usuario
+LEFT JOIN requisicao
+ON usuario.CodUsuario = requisicao.FkCodUsuario
+GROUP BY usuario.NomeUsuario
+HAVING COUNT(requisicao.CodRequisicao) > 0;
