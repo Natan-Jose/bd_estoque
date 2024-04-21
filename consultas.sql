@@ -109,3 +109,13 @@ LEFT JOIN requisicao
 ON usuario.CodUsuario = requisicao.FkCodUsuario
 GROUP BY usuario.NomeUsuario
 HAVING COUNT(requisicao.CodRequisicao) > 0;
+
+SELECT Produto.NomeProduto 
+FROM Produto
+WHERE CodProduto NOT IN (SELECT CodProduto FROM RequisicaoProduto);
+
+SELECT NomeProduto 
+FROM Produto
+WHERE NOT EXISTS (SELECT CodProduto 
+				  FROM RequisicaoProduto
+				  WHERE  Produto.CodProduto = RequisicaoProduto.FkCodProduto);
