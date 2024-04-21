@@ -109,3 +109,4 @@ LEFT JOIN requisicao
 ON usuario.CodUsuario = requisicao.FkCodUsuario
 GROUP BY usuario.NomeUsuario
 HAVING COUNT(requisicao.CodRequisicao) > 0;
+
